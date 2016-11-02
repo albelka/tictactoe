@@ -1,0 +1,18 @@
+.well {
+  margin: 0px;
+  padding: 0px;
+  border: 1px solid black;
+}
+
+.col-xs-4 {
+  padding: 0px;
+  margin: 0px;
+}
+
+img {
+  width: 100%;
+}
+
+h1 {
+  text-align: center;
+}
