@@ -2,6 +2,7 @@
 function Board() {
   this.board = [[0,0,0], [0,0,0], [0,0,0]];
   this.turnsLeft = 9;
+  this.gameOver = false;
 };
 
 function Player() {
@@ -16,6 +17,20 @@ Board.prototype.makeMark = function(row, column, player) {
   } else if (player === "o") {
     $("#" + row + column).children(".o").show();
     $("#" + row + column).children(".clear").hide();
+  }
+}
+
+Board.prototype.countTurns = function(isBlank) {
+  if (isBlank) {
+    this.turnsLeft--;
+  }
+}
+
+Board.prototype.isBlank = function(row, column) {
+  if(this.board[row][column]) {
+  return false;
+  } else {
+    return true;
   }
 }
 
@@ -61,22 +76,6 @@ function parseCoordinates(idString) {
   return [parseInt(idString[0]), parseInt(idString[1])];
 }
 
-Board.prototype.isBlank = function(row, column) {
-  if(this.board[row][column]) {
-  return false;
-  } else {
-    return true;
-  }
-}
-
-Board.prototype.countTurns = function(isBlank) {
-  if (isBlank) {
-    this.turnsLeft--;
-    console.log(this.turnsLeft);
-  } else {
-    alert("blah");
-  }
-}
 
 
 $(function() {
@@ -86,20 +85,30 @@ $(function() {
   $("div .well").each(function(cell) {
     $(this).click(function() {
       var coordinates = parseCoordinates($(this).attr("id"));
-      if(gameBoard.isBlank(coordinates[0], coordinates[1])){
+      if(gameBoard.isBlank(coordinates[0], coordinates[1]) && !gameBoard.gameOver){
         if (gameBoard.turnsLeft % 2 === 1){
           gameBoard.countTurns(gameBoard.isBlank(coordinates[0], coordinates[1]));
           gameBoard.makeMark(coordinates[0], coordinates[1], "x");
           player1.setCell(coordinates[0], coordinates[1]);
-          player1.checkForWinner();
+          if (player1.checkForWinner()){
+            gameBoard.gameOver = true;
+            $("#end").show();
+            $("#winner").text("1");
+          };
         } else if (gameBoard.turnsLeft % 2 === 0) {
           gameBoard.countTurns(gameBoard.isBlank(coordinates[0], coordinates[1]));
           gameBoard.makeMark(coordinates[0], coordinates[1], "o");
           player2.setCell(coordinates[0], coordinates[1]);
-          player2.checkForWinner();
+          if (player2.checkForWinner()){
+            gameBoard.gameOver = true;
+            $("#end").show();
+            $("#winner").text("2");
+          };
         }
+      } else if (gameBoard.gameOver) {
+        alert("The game is over!");
       } else {
-        alert("This square is taken");
+        alert("You can't do that!");
       }
     })
   })
