@@ -2,11 +2,22 @@
   margin: 0px;
   padding: 0px;
   border: 1px solid black;
+  /*background-color: rgba(0, 0, 0, 0.0); hidden until we fix background strikethrough lines*/
+}
+
+.playerCounter {
+  text-align: center;
+  font-family: monospace;
 }
 
 .col-xs-4 {
   padding: 0px;
   margin: 0px;
+}
+
+.gridContainer {
+  /*background-image: url("../img/horizontal.png");*/
+  background-size: 100% 100%;
 }
 
 img {
@@ -17,6 +28,52 @@ h1 {
   text-align: center;
 }
 
-.o,.x, #end {
+
+.o, .x, #end {
   display: none;
+}
+
+#end {
+  text-align: center;
+  background-image: url("../img/kapow.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  padding: 10% 0% 8% 0%;
+}
+
+#winner {
+
+}
+
+body {
+  background-color: #16889c;
+}
+
+.winningCell {
+  background-color: #f50a22
+}
+
+.hozo {
+  background-image: url("../img/horizontal.png");
+}
+.vert {
+  background-image: url("../img/vertical.png");
+}
+.upLeft {
+  background-image: url("../img/upperLeft.png");
+}
+.upRight {
+  background-image: url("../img/upperRight.png");
+}
+.jumbotron {
+  padding: 2%;
+}
+.playerCounter  {
+  border-radius: 7px;
+  background-color: #fb2c22;
+}
+
+#player1WinCounter, #player2WinCounter {
+  border: 1px solid black;
+  background-color: white;
 }

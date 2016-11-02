@@ -9,89 +9,106 @@
   </head>
   <body>
     <div class="container">
-      <div class="jumbotron">
-        <h1>Tic Tac Toe</h1>
-      </div>
-
-      <!--First Row-->
-      <div class="row">
-        <div class="col-xs-4">
-          <div id="00" class="well">
-            <img src="img/clear.png" class="clear" alt="a blank image">
-            <img src="img/X.png" class="x" alt="a picture of an x">
-            <img src="img/O.png" class="o" alt="a picture of an o">
-          </div>
+      <div class="row jumbotron">
+        <div class="col-xs-2 playerCounter">
+          <h3>Player 1</h3>
+          <h3 id="player1WinCounter">0</h3>
         </div>
-        <div class="col-xs-4">
-          <div id="01" class="well">
-            <img src="img/clear.png" class="clear" alt="a blank image">
-            <img src="img/X.png" class="x" alt="a picture of an x">
-            <img src="img/O.png" class="o" alt="a picture of an o">
-          </div>
+        <div class="col-xs-8">
+          <h1>Tic Tac Toe</h1>
+          <button type="button" class="btn center-block" id="resetButton">Reset</button>
         </div>
-        <div class="col-xs-4">
-          <div id="02" class="well">
-            <img src="img/clear.png" class="clear" alt="a blank image">
-            <img src="img/X.png" class="x" alt="a picture of an x">
-            <img src="img/O.png" class="o" alt="a picture of an o">
-          </div>
+        <div class="col-xs-2 playerCounter">
+          <h3>Player 2</h3>
+          <h3 id="player2WinCounter">0</h3>
         </div>
       </div>
 
-      <!--Second Row-->
-      <div class="row">
-        <div class="col-xs-4">
-          <div id="10" class="well">
-            <img src="img/clear.png" class="clear" alt="a blank image">
-            <img src="img/X.png" class="x" alt="a picture of an x">
-            <img src="img/O.png" class="o" alt="a picture of an o">
+      <div class="gridContainer">
 
-          </div>
-        </div>
-        <div class="col-xs-4">
-          <div id="11" class="well">
-            <img src="img/clear.png" class="clear" alt="a blank image">
-            <img src="img/X.png" class="x" alt="a picture of an x">
-            <img src="img/O.png" class="o" alt="a picture of an o">
-          </div>
-        </div>
-        <div class="col-xs-4">
-          <div id="12" class="well">
-            <img src="img/clear.png" class="clear" alt="a blank image">
-            <img src="img/X.png" class="x" alt="a picture of an x">
-            <img src="img/O.png" class="o" alt="a picture of an o">
-          </div>
-        </div>
-      </div>
+        <!--First Row-->
+        <div class="row">
+          <div class="col-xs-4">
+            <div id="00" class="well">
+              <img src="img/clear.png" class="clear" alt="a blank image">
+              <img src="img/X.png" class="x" alt="a picture of an x">
+              <img src="img/O.png" class="o" alt="a picture of an o">
 
-      <!--Third Row-->
-      <div class="row">
-        <div class="col-xs-4">
-          <div id="20" class="well">
-            <img src="img/clear.png" class="clear" alt="a blank image">
-            <img src="img/X.png" class="x" alt="a picture of an x">
-            <img src="img/O.png" class="o" alt="a picture of an o">
+            </div>
+          </div>
+          <div class="col-xs-4">
+            <div id="01" class="well">
+              <img src="img/clear.png" class="clear" alt="a blank image">
+              <img src="img/X.png" class="x" alt="a picture of an x">
+              <img src="img/O.png" class="o" alt="a picture of an o">
+            </div>
+          </div>
+          <div class="col-xs-4">
+            <div id="02" class="well">
+              <img src="img/clear.png" class="clear" alt="a blank image">
+              <img src="img/X.png" class="x" alt="a picture of an x">
+              <img src="img/O.png" class="o" alt="a picture of an o">
+            </div>
           </div>
         </div>
-        <div class="col-xs-4">
-          <div id="21" class="well">
-            <img src="img/clear.png" class="clear" alt="a blank image">
-            <img src="img/X.png" class="x" alt="a picture of an x">
-            <img src="img/O.png" class="o" alt="a picture of an o">
+
+        <!--Second Row-->
+        <div class="row">
+          <div class="col-xs-4">
+            <div id="10" class="well">
+              <img src="img/clear.png" class="clear" alt="a blank image">
+              <img src="img/X.png" class="x" alt="a picture of an x">
+              <img src="img/O.png" class="o" alt="a picture of an o">
+            </div>
+          </div>
+          <div class="col-xs-4">
+            <div id="11" class="well">
+              <img src="img/clear.png" class="clear" alt="a blank image">
+              <img src="img/X.png" class="x" alt="a picture of an x">
+              <img src="img/O.png" class="o" alt="a picture of an o">
+            </div>
+          </div>
+          <div class="col-xs-4">
+            <div id="12" class="well">
+              <img src="img/clear.png" class="clear" alt="a blank image">
+              <img src="img/X.png" class="x" alt="a picture of an x">
+              <img src="img/O.png" class="o" alt="a picture of an o">
+            </div>
           </div>
         </div>
-        <div class="col-xs-4">
-          <div id="22" class="well">
-            <img src="img/clear.png" class="clear" alt="a blank image">
-            <img src="img/X.png" class="x" alt="a picture of an x">
-            <img src="img/O.png" class="o" alt="a picture of an o">
+
+        <!--Third Row-->
+        <div class="row">
+          <div class="col-xs-4">
+            <div id="20" class="well">
+              <img src="img/clear.png" class="clear" alt="a blank image">
+              <img src="img/X.png" class="x" alt="a picture of an x">
+              <img src="img/O.png" class="o" alt="a picture of an o">
+            </div>
+          </div>
+          <div class="col-xs-4">
+            <div id="21" class="well">
+              <img src="img/clear.png" class="clear" alt="a blank image">
+              <img src="img/X.png" class="x" alt="a picture of an x">
+              <img src="img/O.png" class="o" alt="a picture of an o">
+            </div>
+          </div>
+          <div class="col-xs-4">
+            <div id="22" class="well">
+              <img src="img/clear.png" class="clear" alt="a blank image">
+              <img src="img/X.png" class="x" alt="a picture of an x">
+              <img src="img/O.png" class="o" alt="a picture of an o">
+            </div>
           </div>
         </div>
+
       </div>
 
       <div class="row" id="end">
-        <h2>Player <span id="winner"></span>  Wins!</h2>
+        <h2 id="winner"></h2>
       </div>
+
+
     </div>
   </body>
 </html>

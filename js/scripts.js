@@ -7,6 +7,7 @@ function Board() {
 
 function Player() {
   this.board = [[0,0,0], [0,0,0], [0,0,0]];
+  this.winCounter = 0;
 };
 
 Board.prototype.makeMark = function(row, column, player) {
@@ -20,9 +21,15 @@ Board.prototype.makeMark = function(row, column, player) {
   }
 }
 
+//Will count the current turn and end game on a tie
 Board.prototype.countTurns = function(isBlank) {
   if (isBlank) {
     this.turnsLeft--;
+  }
+  if (this.turnsLeft === 0) {
+    this.gameOver = true;
+    $("#end").show();
+    $("#winner").text("Tie game!");
   }
 }
 
@@ -93,7 +100,9 @@ $(function() {
           if (player1.checkForWinner()){
             gameBoard.gameOver = true;
             $("#end").show();
-            $("#winner").text("1");
+            $("#winner").text("Player 1 wins!");
+            player1.winCounter++;
+            $("#player1WinCounter").text(player1.winCounter);
           };
         } else if (gameBoard.turnsLeft % 2 === 0) {
           gameBoard.countTurns(gameBoard.isBlank(coordinates[0], coordinates[1]));
@@ -102,7 +111,9 @@ $(function() {
           if (player2.checkForWinner()){
             gameBoard.gameOver = true;
             $("#end").show();
-            $("#winner").text("2");
+            $("#winner").text("Player 2 wins!");
+            player2.winCounter++;
+            $("#player2WinCounter").text(player2.winCounter);
           };
         }
       } else if (gameBoard.gameOver) {
@@ -111,5 +122,17 @@ $(function() {
         alert("You can't do that!");
       }
     })
+  })
+
+  $("#resetButton").click(function(){
+    $(".well").children(".x").hide();
+    $(".well").children(".o").hide();
+    $(".well").children(".clear").show();
+    $("#end").hide();
+    gameBoard.board = [[0,0,0], [0,0,0], [0,0,0]];
+    player1.board = [[0,0,0], [0,0,0], [0,0,0]];
+    player2.board = [[0,0,0], [0,0,0], [0,0,0]];
+    gameBoard.turnsLeft = 9;
+    gameBoard.gameOver = false;
   })
 })
