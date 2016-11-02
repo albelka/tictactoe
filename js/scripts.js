@@ -10,6 +10,13 @@ function Player() {
 
 Board.prototype.makeMark = function(row, column, player) {
   this.board[row][column] = player;
+  if(player === "x"){
+    $("#" + row + column).children(".x").show();
+    $("#" + row + column).children(".clear").hide();
+  } else if (player === "o") {
+    $("#" + row + column).children(".o").show();
+    $("#" + row + column).children(".clear").hide();
+  }
 }
 
 Player.prototype.setCell = function(row, column) {
@@ -51,7 +58,7 @@ Player.prototype.checkForWinner = function() {
 }
 
 function parseCoordinates(idString) {
-  return [idString[0], idString[1]];
+  return [parseInt(idString[0]), parseInt(idString[1])];
 }
 
 Board.prototype.isBlank = function(row, column) {
@@ -80,12 +87,17 @@ $(function() {
     $(this).click(function() {
       var coordinates = parseCoordinates($(this).attr("id"));
       if(gameBoard.isBlank(coordinates[0], coordinates[1])){
-        gameBoard.countTurns(gameBoard.isBlank(coordinates[0], coordinates[1]));
-        gameBoard.makeMark(coordinates[0], coordinates[1], "x");
-        player1.setCell(coordinates[0], coordinates[1]);
-        $(this).children(".x").show();
-        $(this).children(".clear").hide();
-        player1.checkForWinner();
+        if (gameBoard.turnsLeft % 2 === 1){
+          gameBoard.countTurns(gameBoard.isBlank(coordinates[0], coordinates[1]));
+          gameBoard.makeMark(coordinates[0], coordinates[1], "x");
+          player1.setCell(coordinates[0], coordinates[1]);
+          player1.checkForWinner();
+        } else if (gameBoard.turnsLeft % 2 === 0) {
+          gameBoard.countTurns(gameBoard.isBlank(coordinates[0], coordinates[1]));
+          gameBoard.makeMark(coordinates[0], coordinates[1], "o");
+          player2.setCell(coordinates[0], coordinates[1]);
+          player2.checkForWinner();
+        }
       } else {
         alert("This square is taken");
       }
