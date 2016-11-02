@@ -19,7 +19,8 @@ $(function() {
       var coordinates = parseCoordinates($(this).attr("id"));
       gameBoard.setCell(coordinates[0], coordinates[1], "x");
       console.log(gameBoard.board);
-      $(this).text("x");
+      $(this).children(".x").show();
+      $(this).children(".clear").hide();
     })
   })
 })

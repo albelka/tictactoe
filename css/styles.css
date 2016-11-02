@@ -16,3 +16,7 @@ img {
 h1 {
   text-align: center;
 }
+
+.o,.x {
+  display: none;
+}

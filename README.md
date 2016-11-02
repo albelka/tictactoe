@@ -9,6 +9,7 @@
 •	Create a board objects (nested space to validate clicks)
 
 •	Set one player with single objects
+
 •	Figure out how to make multiple clicks with one player
 •	How to log the game to nine clicks
 •	How to win with one player
