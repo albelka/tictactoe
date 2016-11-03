@@ -93,8 +93,8 @@ Player.prototype.playerWin = function(board) {
   board.gameOver = true;
   $("#end").show();
   $("#winner").text("Player 1 wins!");
-  player1.winCounter++;
-  $("#player1WinCounter").text(player1.winCounter);
+  this.winCounter++;
+  $("#player1WinCounter").text(this.winCounter);
 }
 
 
@@ -115,6 +115,24 @@ function resetUI() {
   $("#end").hide();
 }
 
+function generateUIBoard() {
+  for (row = 0; row < 3; row++) {
+    $(".gridContainer").append('<div class="row" id="'+ row + '"></div>');
+  }
+  $(".gridContainer .row").each(function(row) {
+    for (column = 0; column < 3; column++) {
+      $(this).append( '<div class="col-xs-4">'+
+                        '<div id="'+
+                        $(this).attr("id") + column+
+                        '" class="well">'+
+                          '<img src="img/clear.png" class="clear" alt="a blank image">'+
+                          '<img src="img/X.png" class="x" alt="a picture of an x">'+
+                          '<img src="img/O.png" class="o" alt="a picture of an o">'+
+                        '</div>'+
+                      '</div>')
+    }
+  })
+}
 
 
 
@@ -124,6 +142,7 @@ $(function() {
   var gameBoard = new Board();
   var player1 = new Player("x");
   var player2 = new Player("o");
+  generateUIBoard();
 
   //Add click function to each cell
   $("div .well").each(function(cell) {
