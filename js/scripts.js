@@ -59,11 +59,12 @@ Board.prototype.reset = function(player2) {
 }
 
 
-function Player(mark, isHuman) {
+function Player(mark, isHuman, difficulty) {
   this.board = [[0,0,0], [0,0,0], [0,0,0]];
   this.winCounter = 0;
   this.mark = mark;
   this.isHuman = isHuman;
+  this.difficulty = difficulty;
   this.squaresRemaining = ["00", "01", "02", "10", "11", "12", "20", "21", "22"];
 };
 
@@ -106,12 +107,9 @@ Player.prototype.computerTurn = function(board, player1) {
   var opponentAdjacentRow = player1.twoInARow();
   var adjacentColumn = this.twoInAColumn();
   var opponentAdjacentColumn = player1.twoInAColumn();
-  console.log("oAC: ", opponentAdjacentColumn);
-  console.log(this.squaresRemaining);
 
   //check for two Os in a row
-  if ((adjacentRow) && (findMatchingElement(adjacentRow, this.squaresRemaining).length > 0)) {
-    console.log("aR");
+  if ((adjacentRow) && (findMatchingElement(adjacentRow, this.squaresRemaining).length > 0) && (this.difficulty === "normal" || this.difficulty === "hard")) {
     adjacentRow = findMatchingElement(adjacentRow, this.squaresRemaining);
     if (adjacentRow.length > 0) {
       var cpuChoice = this.pickRandomSquare(adjacentRow);
@@ -120,19 +118,20 @@ Player.prototype.computerTurn = function(board, player1) {
     }
 
   //check for opponent two Xs in a row
-} else if ((opponentAdjacentRow) && (findMatchingElement(opponentAdjacentRow, this.squaresRemaining).length > 0)) {
-    console.log("oAR");
-    console.log(opponentAdjacentRow);
+  } else if ((opponentAdjacentRow) &&
+          (findMatchingElement(opponentAdjacentRow, this.squaresRemaining).length > 0) &&
+          (this.difficulty === "normal" || this.difficulty === "hard")) {
     opponentAdjacentRow = findMatchingElement(opponentAdjacentRow, this.squaresRemaining);
     if (opponentAdjacentRow.length > 0) {
-      var cpuChoice = player1.pickRandomSquare(opponentAdjacentRow);
+      var cpuChoice = this.pickRandomSquare(opponentAdjacentRow);
     } else {
-      var cpuChoice = player1.pickRandomSquare(this.squaresRemaining);
+      var cpuChoice = this.pickRandomSquare(this.squaresRemaining);
     }
 
   //Check for two Ox in a column
-} else if ((adjacentColumn) && (findMatchingElement(adjacentColumn, this.squaresRemaining).length > 0)) {
-    console.log("aC");
+  } else if ((adjacentColumn) &&
+            (findMatchingElement(adjacentColumn, this.squaresRemaining).length > 0) &&
+            (this.difficulty === "hard")) {
     adjacentColumn = findMatchingElement(adjacentColumn, this.squaresRemaining);
     if (adjacentRow.length > 0) {
       var cpuChoice = this.pickRandomSquare(adjacentColumn);
@@ -141,24 +140,54 @@ Player.prototype.computerTurn = function(board, player1) {
     }
 
   //check for two opponent Xs in a column
-} else if ((opponentAdjacentColumn) && (findMatchingElement(opponentAdjacentColumn, this.squaresRemaining).length > 0)) {
-    console.log("oAC");
-    console.log("opponent column: ", opponentAdjacentColumn);
+  } else if ((opponentAdjacentColumn) &&
+            (findMatchingElement(opponentAdjacentColumn,       this.squaresRemaining).length > 0) &&
+            (this.difficulty === "hard")) {
     opponentAdjacentColumn = findMatchingElement(opponentAdjacentColumn, this.squaresRemaining);
-    console.log("cpu options: ", opponentAdjacentColumn);
     if (opponentAdjacentColumn.length > 0) {
-      var cpuChoice = player1.pickRandomSquare(opponentAdjacentColumn);
-      console.log("chose random from: ", opponentAdjacentColumn);
+      var cpuChoice = this.pickRandomSquare(opponentAdjacentColumn);
     } else {
-      var cpuChoice = player1.pickRandomSquare(this.squaresRemaining);
-      console.log("chose random from: ", this.squaresRemaining);
+      var cpuChoice = this.pickRandomSquare(this.squaresRemaining);
     }
 
   //check for two Os in a diagonal
-
+  } else if ((this.board[0][0] + this.board[1][1] + this.board[2][2] === 2) &&
+          (this.difficulty === "hard") && (this.squaresRemaining.length > 0)) {
+    var diagonalArray = ["00", "11", "22"];
+    var adjacentDiagonal = findMatchingElement(diagonalArray, this.squaresRemaining);
+    if (adjacentDiagonal.length > 0) {
+      var cpuChoice = this.pickRandomSquare(adjacentDiagonal);
+    } else {
+      var cpuChoice = this.pickRandomSquare(this.squaresRemaining);
+    }
+  } else if ((this.board[0][2] + this.board[1][1] + this.board[2][0] === 2) &&
+            (this.difficulty === "hard") && (this.squaresRemaining.length > 0)) {
+    var diagonalArray = ["02", "11", "20"];
+    var adjacentDiagonal = findMatchingElement(diagonalArray, this.squaresRemaining);
+    if (adjacentDiagonal.length > 0) {
+      var cpuChoice = this.pickRandomSquare(adjacentDiagonal);
+    } else {
+      var cpuChoice = this.pickRandomSquare(this.squaresRemaining);
+    }
 
   //check for two opponent Xs in a diagonal
-
+  } else if ((player1.board[0][0] + player1.board[1][1] + player1.board[2][2] === 2) &&
+            (this.difficulty === "hard") && (this.squaresRemaining.length > 0)) {
+    var diagonalArray = ["00", "11", "22"];
+    var adjacentDiagonal = findMatchingElement(diagonalArray, this.squaresRemaining);
+    if (adjacentDiagonal.length > 0) {
+      var cpuChoice = this.pickRandomSquare(adjacentDiagonal);
+    } else {
+      var cpuChoice = this.pickRandomSquare(this.squaresRemaining);
+    }
+  } else if ((player1.board[0][2] + player1.board[1][1] + player1.board[2][0] === 2) && (this.difficulty === "hard") && (this.squaresRemaining.length > 0)) {
+    var diagonalArray = ["02", "11", "20"];
+    var adjacentDiagonal = findMatchingElement(diagonalArray, this.squaresRemaining);
+    if (adjacentDiagonal.length > 0) {
+      var cpuChoice = this.pickRandomSquare(adjacentDiagonal);
+    } else {
+      var cpuChoice = this.pickRandomSquare(this.squaresRemaining);
+    }
 
   //Take center square if available
   } else if (board.board[1][1] === 0) {
@@ -188,7 +217,6 @@ Player.prototype.computerTurn = function(board, player1) {
 }
 
 Player.prototype.pickRandomSquare = function(possibleList) {
-  console.log("possibleList: ", possibleList);
   var choiceIndex = Math.floor(Math.random() * possibleList.length);
   var idString = possibleList[choiceIndex];
   return [idString[0], idString[1]];
@@ -248,7 +276,6 @@ Player.prototype.twoInAColumn = function() {
     }
   }
 
-  console.log("twoInAColumn: ", adjacentColumn);
   if (adjacentColumn.length > 0) {
     return adjacentColumn;
   } else {
@@ -258,8 +285,6 @@ Player.prototype.twoInAColumn = function() {
 
 function findMatchingElement(array1, array2) {
   var matchingElements = [];
-  console.log("array1: ", array1);
-  console.log("array2: ", array2);
   for (i = 0; i < array1.length; i++) {
     for (j = 0; j < array2.length; j++) {
       if (array1[i] === array2[j]) {
@@ -325,8 +350,8 @@ $(function() {
 
     //Initialize objects
     gameBoard = new Board();
-    player1 = new Player("x", true);
-    player2 = new Player("o", true);
+    player1 = new Player("x", true, null);
+    player2 = new Player("o", true, null);
     $("#resetButton").show();
     $(".blank").addClass(player1.mark + "BG");
   })
@@ -337,8 +362,20 @@ $(function() {
 
     //Initialize objects
     gameBoard = new Board();
-    player1 = new Player("x", true);
-    player2 = new Player("o", false);
+    player1 = new Player("x", true, null);
+    player2 = new Player("o", false, "easy");
+    $("#resetButton").show();
+    $(".blank").addClass(player1.mark + "BG");
+  })
+
+  $("#computerNormal").click(function() {
+    $(".gridContainer").show();
+    $(".startScreen").hide();
+
+    //Initialize objects
+    gameBoard = new Board();
+    player1 = new Player("x", true, null);
+    player2 = new Player("o", false, "normal");
     $("#resetButton").show();
     $(".blank").addClass(player1.mark + "BG");
   })
@@ -346,12 +383,11 @@ $(function() {
   $("#computerHard").click(function() {
     $(".gridContainer").show();
     $(".startScreen").hide();
-    alert("Hard AI is not finished.  How about a game against an easy computer?")
 
     //Initialize objects
     gameBoard = new Board();
-    player1 = new Player("x", true);
-    player2 = new Player("o", false);
+    player1 = new Player("x", true, null);
+    player2 = new Player("o", false, "hard");
     $("#resetButton").show();
     $(".blank").addClass(player1.mark + "BG");
   })

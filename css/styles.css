@@ -44,8 +44,22 @@
   background-color: lightgray;
   text-align: center;
   padding: 10px 0px 15px 0px;
-  margin: 20px;
+  margin: 5px;
   border-radius: 5px;
+  height: 100px;
+}
+
+.startScreen {
+  text-align: center;
+}
+
+.opponentSelectLabel {
+  border-radius: 7px;
+  background-color: white;
+  width: 60%;
+  display: block;
+  margin: 10px auto 10px auto;
+  padding: 10px 0px 10px 0px;
 }
 
 .opponentSelectButton:hover {
@@ -89,18 +103,6 @@ body {
   background-color: #f50a22
 }
 
-.hozo {
-  background-image: url("../img/horizontal.png");
-}
-.vert {
-  background-image: url("../img/vertical.png");
-}
-.upLeft {
-  background-image: url("../img/upperLeft.png");
-}
-.upRight {
-  background-image: url("../img/upperRight.png");
-}
 .jumbotron {
   padding: 2%;
 }
