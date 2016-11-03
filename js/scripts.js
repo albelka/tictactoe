@@ -56,10 +56,6 @@ Board.prototype.reset = function(player2) {
   } else {
     $(".well").addClass("oBG");
   }
-
-  console.log("this.board: ", this.board);
-  console.log("this.turnsLeft: ", this.turnsLeft);
-  console.log("this.gameOver: ", this.gameOver);
 }
 
 
