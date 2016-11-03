@@ -104,8 +104,14 @@ Player.prototype.checkForWinner = function() {
 Player.prototype.computerTurn = function(board, player1) {
   var adjacentRow = this.twoInARow();
   var opponentAdjacentRow = player1.twoInARow();
+  var adjacentColumn = this.twoInAColumn();
+  var opponentAdjacentColumn = player1.twoInAColumn();
+  console.log("oAC: ", opponentAdjacentColumn);
+  console.log(this.squaresRemaining);
 
-  if ((adjacentRow) && (this.squaresRemaining.length > 0)) {
+  //check for two Os in a row
+  if ((adjacentRow) && (findMatchingElement(adjacentRow, this.squaresRemaining).length > 0)) {
+    console.log("aR");
     adjacentRow = findMatchingElement(adjacentRow, this.squaresRemaining);
     if (adjacentRow.length > 0) {
       var cpuChoice = this.pickRandomSquare(adjacentRow);
@@ -113,24 +119,58 @@ Player.prototype.computerTurn = function(board, player1) {
       var cpuChoice = this.pickRandomSquare(this.squaresRemaining);
     }
 
-  } else if ((opponentAdjacentRow) && (this.squaresRemaining.length > 0)) {
-    console.log("adjacent row: ", opponentAdjacentRow);
+  //check for opponent two Xs in a row
+} else if ((opponentAdjacentRow) && (findMatchingElement(opponentAdjacentRow, this.squaresRemaining).length > 0)) {
+    console.log("oAR");
+    console.log(opponentAdjacentRow);
     opponentAdjacentRow = findMatchingElement(opponentAdjacentRow, this.squaresRemaining);
     if (opponentAdjacentRow.length > 0) {
       var cpuChoice = player1.pickRandomSquare(opponentAdjacentRow);
-      console.log("cpuChoice: ", cpuChoice);
     } else {
       var cpuChoice = player1.pickRandomSquare(this.squaresRemaining);
     }
 
+  //Check for two Ox in a column
+} else if ((adjacentColumn) && (findMatchingElement(adjacentColumn, this.squaresRemaining).length > 0)) {
+    console.log("aC");
+    adjacentColumn = findMatchingElement(adjacentColumn, this.squaresRemaining);
+    if (adjacentRow.length > 0) {
+      var cpuChoice = this.pickRandomSquare(adjacentColumn);
+    } else {
+      var cpuChoice = this.pickRandomSquare(this.squaresRemaining);
+    }
+
+  //check for two opponent Xs in a column
+} else if ((opponentAdjacentColumn) && (findMatchingElement(opponentAdjacentColumn, this.squaresRemaining).length > 0)) {
+    console.log("oAC");
+    console.log("opponent column: ", opponentAdjacentColumn);
+    opponentAdjacentColumn = findMatchingElement(opponentAdjacentColumn, this.squaresRemaining);
+    console.log("cpu options: ", opponentAdjacentColumn);
+    if (opponentAdjacentColumn.length > 0) {
+      var cpuChoice = player1.pickRandomSquare(opponentAdjacentColumn);
+      console.log("chose random from: ", opponentAdjacentColumn);
+    } else {
+      var cpuChoice = player1.pickRandomSquare(this.squaresRemaining);
+      console.log("chose random from: ", this.squaresRemaining);
+    }
+
+  //check for two Os in a diagonal
+
+
+  //check for two opponent Xs in a diagonal
+
+
+  //Take center square if available
   } else if (board.board[1][1] === 0) {
     var cpuChoice = "11";
 
+
+  //stop if game is over
   } else if (board.gameOver) {
     var cpuChoice = false;
 
+  //Take random square if no other condition is met
   } else {
-    console.log("not adjacentRow");
     var cpuChoice = player1.pickRandomSquare(this.squaresRemaining);
   }
   if (cpuChoice) {
@@ -148,10 +188,9 @@ Player.prototype.computerTurn = function(board, player1) {
 }
 
 Player.prototype.pickRandomSquare = function(possibleList) {
+  console.log("possibleList: ", possibleList);
   var choiceIndex = Math.floor(Math.random() * possibleList.length);
-  console.log("choice index: ", choiceIndex);
   var idString = possibleList[choiceIndex];
-  console.log("idString: ", idString);
   return [idString[0], idString[1]];
 }
 
@@ -191,7 +230,6 @@ Player.prototype.twoInARow = function() {
     }
   }
 
-  console.log("two in a row: ", adjacentRow);
   if (adjacentRow.length > 0) {
     return adjacentRow;
   } else {
@@ -199,10 +237,29 @@ Player.prototype.twoInARow = function() {
   }
 }
 
+Player.prototype.twoInAColumn = function() {
+  var adjacentColumn = [];
+
+  for (columnIndex = 0; columnIndex < 3; columnIndex++) {
+    if (this.board[0][columnIndex] + this.board[1][columnIndex] + this.board[2][columnIndex] === 2) {
+      for (rowIndex = 0; rowIndex < 3; rowIndex++) {
+        adjacentColumn.push(rowIndex.toString() + columnIndex.toString());
+      }
+    }
+  }
+
+  console.log("twoInAColumn: ", adjacentColumn);
+  if (adjacentColumn.length > 0) {
+    return adjacentColumn;
+  } else {
+    return false;
+  }
+}
+
 function findMatchingElement(array1, array2) {
+  var matchingElements = [];
   console.log("array1: ", array1);
   console.log("array2: ", array2);
-  var matchingElements = [];
   for (i = 0; i < array1.length; i++) {
     for (j = 0; j < array2.length; j++) {
       if (array1[i] === array2[j]) {
@@ -211,7 +268,6 @@ function findMatchingElement(array1, array2) {
     }
   }
 
-  console.log("matching elements: ", matchingElements);
   return matchingElements;
 }
 
