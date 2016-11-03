@@ -12,15 +12,29 @@
       <div class="row jumbotron">
         <div class="col-xs-2 playerCounter">
           <h3>Player 1</h3>
-          <h3 id="player1WinCounter">0</h3>
+          <h3 id="xWinCounter">0</h3>
         </div>
-        <div class="col-xs-8">
+        <div class="col-xs-8 titleColumn">
           <h1>Tic Tac Toe</h1>
-          <button type="button" class="btn center-block" id="resetButton">Reset</button>
+          <button type="button" class="btn" id="resetButton">Reset</button>
         </div>
         <div class="col-xs-2 playerCounter">
           <h3>Player 2</h3>
-          <h3 id="player2WinCounter">0</h3>
+          <h3 id="oWinCounter">0</h3>
+        </div>
+      </div>
+
+      <div class="row startScreen">
+        <h2>Select your opponent</h2>
+        <div class="col-xs-6">
+          <div class="opponentSelectButton" id="human">
+            Human
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="opponentSelectButton" id="computer">
+            Computer
+          </div>
         </div>
       </div>
 

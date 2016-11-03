@@ -41,10 +41,12 @@ Board.prototype.reset = function() {
 }
 
 
-function Player(mark) {
+function Player(mark, isHuman) {
   this.board = [[0,0,0], [0,0,0], [0,0,0]];
   this.winCounter = 0;
   this.mark = mark;
+  this.isHuman = isHuman;
+  this.squaresRemaining = ["00", "01", "02", "10", "11", "12", "20", "21", "22"];
 };
 
 Player.prototype.checkForWinner = function() {
@@ -81,21 +83,36 @@ Player.prototype.checkForWinner = function() {
   return isWinner;
 }
 
+Player.prototype.pickRandomSquare = function() {
+  var choiceIndex = Math.floor(Math.random() * this.squaresRemaining.length);
+  var idString = this.squaresRemaining[choiceIndex];
+  return [idString[0], idString[1]];
+}
+
+Player.prototype.playerWin = function(board) {
+  board.gameOver = true;
+  $("#end").show();
+  $("#winner").text(this.mark.toUpperCase() + " wins!");
+  this.winCounter++;
+  $("#" + this.mark + "WinCounter").text(this.winCounter);
+}
+
+Player.prototype.popCell = function(row, column) {
+  var idString = row.toString() + column.toString();
+  this.squaresRemaining = this.squaresRemaining.filter(function(index) {
+    return index != idString;
+  });
+}
+
 Player.prototype.reset = function() {
   this.board = [[0,0,0], [0,0,0], [0,0,0]];
+  this.squaresRemaining = ["00", "01", "02", "10", "11", "12", "20", "21", "22"];
 }
 
 Player.prototype.setCell = function(row, column) {
   this.board[row][column] = 1;
 }
 
-Player.prototype.playerWin = function(board) {
-  board.gameOver = true;
-  $("#end").show();
-  $("#winner").text("Player 1 wins!");
-  this.winCounter++;
-  $("#player1WinCounter").text(this.winCounter);
-}
 
 
 function parseCoordinates(idString) {
@@ -138,11 +155,32 @@ function generateUIBoard() {
 
 //Front End
 $(function() {
-  //Initialize objects
-  var gameBoard = new Board();
-  var player1 = new Player("x");
-  var player2 = new Player("o");
   generateUIBoard();
+  var gameBoard;
+  var player1;
+  var player2;
+
+  $("#human").click(function() {
+    $(".gridContainer").show();
+    $(".startScreen").hide();
+
+    //Initialize objects
+    gameBoard = new Board();
+    player1 = new Player("x", true);
+    player2 = new Player("o", true);
+    $("#resetButton").show();
+  })
+
+  $("#computer").click(function() {
+    $(".gridContainer").show();
+    $(".startScreen").hide();
+
+    //Initialize objects
+    gameBoard = new Board();
+    player1 = new Player("x", true);
+    player2 = new Player("o", false);
+    $("#resetButton").show();
+  })
 
   //Add click function to each cell
   $("div .well").each(function(cell) {
@@ -150,25 +188,37 @@ $(function() {
       var coordinates = parseCoordinates($(this).attr("id"));
 
       //Check to make sure the cell that was clicked is blank and that the game is not over
-      if(gameBoard.isBlank(coordinates[0], coordinates[1]) && !gameBoard.gameOver){
+      if(gameBoard.isBlank(coordinates[0], coordinates[1]) && !gameBoard.gameOver) {
 
         //Update game board and check for a winner (player 1)
-        if (gameBoard.turnsLeft % 2 === 1){
+        if (gameBoard.turnsLeft % 2 === 1) {
           gameBoard.countTurns(gameBoard.isBlank(coordinates[0], coordinates[1]));
           gameBoard.makeMark(coordinates[0], coordinates[1], player1);
           player1.setCell(coordinates[0], coordinates[1]);
-          if (player1.checkForWinner()){
+          player2.popCell(coordinates[0], coordinates[1]);
+          if (player1.checkForWinner()) {
             player1.playerWin(gameBoard);
-          };
+          } else if (!player2.isHuman) {
+            var cpuChoice = player2.pickRandomSquare();
+            gameBoard.countTurns(gameBoard.isBlank(cpuChoice[0], cpuChoice[1]));
+            gameBoard.makeMark(cpuChoice[0], cpuChoice[1], player2);
+            player2.setCell(cpuChoice[0], cpuChoice[1]);
+            player2.popCell(cpuChoice[0], cpuChoice[1]);
+            if (player2.checkForWinner()) {
+              player2.playerWin(gameBoard);
+            }
+          }
 
-        //Update game board and check for a winner (player 1)
-        } else if (gameBoard.turnsLeft % 2 === 0) {
+
+        //Update game board and check for a winner (player 2)
+        } else if (gameBoard.turnsLeft % 2 === 0 && player2.isHuman) {
           gameBoard.countTurns(gameBoard.isBlank(coordinates[0], coordinates[1]));
           gameBoard.makeMark(coordinates[0], coordinates[1], player2);
           player2.setCell(coordinates[0], coordinates[1]);
-          if (player2.checkForWinner()){
+          player2.popCell(coordinates[0], coordinates[1]);
+          if (player2.checkForWinner()) {
             player2.playerWin(gameBoard);
-          };
+          }
         }
 
       //Alert players if they try to select a square when the game is over

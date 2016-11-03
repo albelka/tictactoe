@@ -17,7 +17,24 @@
 
 .gridContainer {
   /*background-image: url("../img/horizontal.png");*/
+  display: none;
   background-size: 100% 100%;
+}
+
+#resetButton {
+  display: none;
+}
+
+.titleColumn {
+  text-align: center;
+}
+
+.opponentSelectButton {
+  background-color: lightgray;
+}
+
+.opponentSelectButton:hover {
+  cursor: pointer;
 }
 
 img {
@@ -28,6 +45,9 @@ h1 {
   text-align: center;
 }
 
+h2 {
+  text-align: center;
+}
 
 .o, .x, #end {
   display: none;
@@ -73,7 +93,7 @@ body {
   background-color: #fb2c22;
 }
 
-#player1WinCounter, #player2WinCounter {
+#xWinCounter, #oWinCounter {
   border: 1px solid black;
   background-color: white;
 }
