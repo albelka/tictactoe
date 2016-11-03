@@ -9,11 +9,9 @@ function Board() {
 
 Board.prototype.changeHightlight = function(player) {
   if (player.mark === "x") {
-    console.log("x");
     $(".blank").removeClass("xBG");
     $(".blank").addClass("oBG");
   } else if (player.mark === "o") {
-    console.log("o");
     $(".blank").removeClass("oBG");
     $(".blank").addClass("xBG");
   }
@@ -54,12 +52,14 @@ Board.prototype.reset = function(player2) {
   this.turnsLeft = 9;
   this.gameOver = false;
   if (((this.gameCounter + this.turnsLeft ) % 2 === 1) || (!player2.isHuman)) {
-    console.log(this.gameCounter, "x");
     $(".well").addClass("xBG");
   } else {
-    console.log(this.gameCounter, "o");
     $(".well").addClass("oBG");
   }
+
+  console.log("this.board: ", this.board);
+  console.log("this.turnsLeft: ", this.turnsLeft);
+  console.log("this.gameOver: ", this.gameOver);
 }
 
 
@@ -105,23 +105,57 @@ Player.prototype.checkForWinner = function() {
   return isWinner;
 }
 
-Player.prototype.computerTurn = function(board, player) {
-  var cpuChoice = this.pickRandomSquare();
-  board.countTurns(board.isBlank(cpuChoice[0], cpuChoice[1]));
-  board.makeMark(cpuChoice[0], cpuChoice[1], this);
-  board.changeHightlight(this);
-  this.setCell(cpuChoice[0], cpuChoice[1]);
-  this.popCell(cpuChoice[0], cpuChoice[1]);
-  if (this.checkForWinner()) {
-    this.playerWin(board);
-    $(".blank").removeClass(this.mark + "BG");
-    $(".blank").removeClass(player.mark + "BG");
+Player.prototype.computerTurn = function(board, player1) {
+  var adjacentRow = this.twoInARow();
+  var opponentAdjacentRow = player1.twoInARow();
+
+  if ((adjacentRow) && (this.squaresRemaining.length > 0)) {
+    adjacentRow = findMatchingElement(adjacentRow, this.squaresRemaining);
+    if (adjacentRow.length > 0) {
+      var cpuChoice = this.pickRandomSquare(adjacentRow);
+    } else {
+      var cpuChoice = this.pickRandomSquare(this.squaresRemaining);
+    }
+
+  } else if ((opponentAdjacentRow) && (this.squaresRemaining.length > 0)) {
+    console.log("adjacent row: ", opponentAdjacentRow);
+    opponentAdjacentRow = findMatchingElement(opponentAdjacentRow, this.squaresRemaining);
+    if (opponentAdjacentRow.length > 0) {
+      var cpuChoice = player1.pickRandomSquare(opponentAdjacentRow);
+      console.log("cpuChoice: ", cpuChoice);
+    } else {
+      var cpuChoice = player1.pickRandomSquare(this.squaresRemaining);
+    }
+
+  } else if (board.board[1][1] === 0) {
+    var cpuChoice = "11";
+
+  } else if (board.gameOver) {
+    var cpuChoice = false;
+
+  } else {
+    console.log("not adjacentRow");
+    var cpuChoice = player1.pickRandomSquare(this.squaresRemaining);
+  }
+  if (cpuChoice) {
+    board.countTurns(board.isBlank(cpuChoice[0], cpuChoice[1]));
+    board.makeMark(cpuChoice[0], cpuChoice[1], this);
+    board.changeHightlight(this);
+    this.setCell(cpuChoice[0], cpuChoice[1]);
+    this.popCell(cpuChoice[0], cpuChoice[1]);
+    if (this.checkForWinner()) {
+      this.playerWin(board);
+      $(".blank").removeClass(this.mark + "BG");
+      $(".blank").removeClass(player1.mark + "BG");
+    }
   }
 }
 
-Player.prototype.pickRandomSquare = function() {
-  var choiceIndex = Math.floor(Math.random() * this.squaresRemaining.length);
-  var idString = this.squaresRemaining[choiceIndex];
+Player.prototype.pickRandomSquare = function(possibleList) {
+  var choiceIndex = Math.floor(Math.random() * possibleList.length);
+  console.log("choice index: ", choiceIndex);
+  var idString = possibleList[choiceIndex];
+  console.log("idString: ", idString);
   return [idString[0], idString[1]];
 }
 
@@ -150,7 +184,40 @@ Player.prototype.setCell = function(row, column) {
   this.board[row][column] = 1;
 }
 
+Player.prototype.twoInARow = function() {
+  var adjacentRow = [];
 
+  for (rowIndex = 0; rowIndex < 3; rowIndex++) {
+    if (this.board[rowIndex][0] + this.board[rowIndex][1] + this.board[rowIndex][2] === 2) {
+      for (elementIndex = 0; elementIndex < 3; elementIndex++) {
+        adjacentRow.push(rowIndex.toString() + elementIndex.toString());
+      }
+    }
+  }
+
+  console.log("two in a row: ", adjacentRow);
+  if (adjacentRow.length > 0) {
+    return adjacentRow;
+  } else {
+    return false;
+  }
+}
+
+function findMatchingElement(array1, array2) {
+  console.log("array1: ", array1);
+  console.log("array2: ", array2);
+  var matchingElements = [];
+  for (i = 0; i < array1.length; i++) {
+    for (j = 0; j < array2.length; j++) {
+      if (array1[i] === array2[j]) {
+        matchingElements.push(array1[i]);
+      }
+    }
+  }
+
+  console.log("matching elements: ", matchingElements);
+  return matchingElements;
+}
 
 function parseCoordinates(idString) {
   return [parseInt(idString[0]), parseInt(idString[1])];

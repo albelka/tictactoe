@@ -22,10 +22,25 @@ _This program will allow two players to play tic tac toe. The program alerts if 
 *	_How to win with one player_
 
 *	_How to add second player and his objects_
+
 *	_Set clicks to alternate between O and X_
+
 *	_Set separate player arrays to track players performance_
 
 *	_Figure out how to limit the clicked box from not been clicked on again_
+
+
+# AI Specifications_
+
+*	_The computer should know when there are two adjacent squares marked_
+
+*	_The computer should block whenever a player has two in a row_
+
+*	_The computer should choose the center square for it's first move if possible_
+
+
+
+
 
 ## Support and contact details
 
