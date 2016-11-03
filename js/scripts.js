@@ -3,8 +3,21 @@
 function Board() {
   this.board = [[0,0,0], [0,0,0], [0,0,0]];
   this.turnsLeft = 9;
+  this.gameCounter = 0;
   this.gameOver = false;
 };
+
+Board.prototype.changeHightlight = function(player) {
+  if (player.mark === "x") {
+    console.log("x");
+    $(".blank").removeClass("xBG");
+    $(".blank").addClass("oBG");
+  } else if (player.mark === "o") {
+    console.log("o");
+    $(".blank").removeClass("oBG");
+    $(".blank").addClass("xBG");
+  }
+}
 
 //Will count the current turn and end game on a tie
 Board.prototype.countTurns = function(isBlank) {
@@ -32,12 +45,21 @@ Board.prototype.makeMark = function(row, column, player) {
   this.board[row][column] = player.mark;
   $("#" + row + column).children("." + player.mark).show();
   $("#" + row + column).children(".clear").hide();
+  $("#" + row + column).removeClass("blank");
+  //$("#" + row + column).removeClass("." + player.mark + "BG");
 }
 
-Board.prototype.reset = function() {
+Board.prototype.reset = function(player2) {
   this.board = [[0,0,0], [0,0,0], [0,0,0]];
   this.turnsLeft = 9;
   this.gameOver = false;
+  if (((this.gameCounter + this.turnsLeft ) % 2 === 1) || (!player2.isHuman)) {
+    console.log(this.gameCounter, "x");
+    $(".well").addClass("xBG");
+  } else {
+    console.log(this.gameCounter, "o");
+    $(".well").addClass("oBG");
+  }
 }
 
 
@@ -83,6 +105,20 @@ Player.prototype.checkForWinner = function() {
   return isWinner;
 }
 
+Player.prototype.computerTurn = function(board, player) {
+  var cpuChoice = this.pickRandomSquare();
+  board.countTurns(board.isBlank(cpuChoice[0], cpuChoice[1]));
+  board.makeMark(cpuChoice[0], cpuChoice[1], this);
+  board.changeHightlight(this);
+  this.setCell(cpuChoice[0], cpuChoice[1]);
+  this.popCell(cpuChoice[0], cpuChoice[1]);
+  if (this.checkForWinner()) {
+    this.playerWin(board);
+    $(".blank").removeClass(this.mark + "BG");
+    $(".blank").removeClass(player.mark + "BG");
+  }
+}
+
 Player.prototype.pickRandomSquare = function() {
   var choiceIndex = Math.floor(Math.random() * this.squaresRemaining.length);
   var idString = this.squaresRemaining[choiceIndex];
@@ -91,6 +127,7 @@ Player.prototype.pickRandomSquare = function() {
 
 Player.prototype.playerWin = function(board) {
   board.gameOver = true;
+  board.gameCounter++;
   $("#end").show();
   $("#winner").text(this.mark.toUpperCase() + " wins!");
   this.winCounter++;
@@ -120,7 +157,7 @@ function parseCoordinates(idString) {
 }
 
 function resetObjects(board, player1, player2) {
-  board.reset();
+  board.reset(player2);
   player1.reset();
   player2.reset();
 }
@@ -130,6 +167,9 @@ function resetUI() {
   $(".well").children(".o").hide();
   $(".well").children(".clear").show();
   $("#end").hide();
+  $(".well").addClass("blank");
+  $(".well").removeClass("oBG");
+  $(".well").removeClass("xBG");
 }
 
 function generateUIBoard() {
@@ -141,7 +181,7 @@ function generateUIBoard() {
       $(this).append( '<div class="col-xs-4">'+
                         '<div id="'+
                         $(this).attr("id") + column+
-                        '" class="well">'+
+                        '" class="well blank">'+
                           '<img src="img/clear.png" class="clear" alt="a blank image">'+
                           '<img src="img/X.png" class="x" alt="a picture of an x">'+
                           '<img src="img/O.png" class="o" alt="a picture of an o">'+
@@ -169,9 +209,10 @@ $(function() {
     player1 = new Player("x", true);
     player2 = new Player("o", true);
     $("#resetButton").show();
+    $(".blank").addClass(player1.mark + "BG");
   })
 
-  $("#computer").click(function() {
+  $("#computerEasy").click(function() {
     $(".gridContainer").show();
     $(".startScreen").hide();
 
@@ -180,6 +221,20 @@ $(function() {
     player1 = new Player("x", true);
     player2 = new Player("o", false);
     $("#resetButton").show();
+    $(".blank").addClass(player1.mark + "BG");
+  })
+
+  $("#computerHard").click(function() {
+    $(".gridContainer").show();
+    $(".startScreen").hide();
+    alert("Hard AI is not finished.  How about a game against an easy computer?")
+
+    //Initialize objects
+    gameBoard = new Board();
+    player1 = new Player("x", true);
+    player2 = new Player("o", false);
+    $("#resetButton").show();
+    $(".blank").addClass(player1.mark + "BG");
   })
 
   //Add click function to each cell
@@ -191,33 +246,45 @@ $(function() {
       if(gameBoard.isBlank(coordinates[0], coordinates[1]) && !gameBoard.gameOver) {
 
         //Update game board and check for a winner (player 1)
-        if (gameBoard.turnsLeft % 2 === 1) {
+        if ((gameBoard.turnsLeft + gameBoard.gameCounter) % 2 === 1) {
           gameBoard.countTurns(gameBoard.isBlank(coordinates[0], coordinates[1]));
           gameBoard.makeMark(coordinates[0], coordinates[1], player1);
+          gameBoard.changeHightlight(player1);
           player1.setCell(coordinates[0], coordinates[1]);
           player2.popCell(coordinates[0], coordinates[1]);
           if (player1.checkForWinner()) {
             player1.playerWin(gameBoard);
+            $(".blank").removeClass(player2.mark + "BG");
+            $(".blank").removeClass(player1.mark + "BG");
           } else if (!player2.isHuman) {
-            var cpuChoice = player2.pickRandomSquare();
-            gameBoard.countTurns(gameBoard.isBlank(cpuChoice[0], cpuChoice[1]));
-            gameBoard.makeMark(cpuChoice[0], cpuChoice[1], player2);
-            player2.setCell(cpuChoice[0], cpuChoice[1]);
-            player2.popCell(cpuChoice[0], cpuChoice[1]);
-            if (player2.checkForWinner()) {
-              player2.playerWin(gameBoard);
-            }
+            player2.computerTurn(gameBoard, player1);
           }
 
-
         //Update game board and check for a winner (player 2)
-        } else if (gameBoard.turnsLeft % 2 === 0 && player2.isHuman) {
+        } else if ((gameBoard.turnsLeft + gameBoard.gameCounter) % 2 === 0 && player2.isHuman) {
           gameBoard.countTurns(gameBoard.isBlank(coordinates[0], coordinates[1]));
           gameBoard.makeMark(coordinates[0], coordinates[1], player2);
+          gameBoard.changeHightlight(player2);
           player2.setCell(coordinates[0], coordinates[1]);
           player2.popCell(coordinates[0], coordinates[1]);
           if (player2.checkForWinner()) {
             player2.playerWin(gameBoard);
+            $(".blank").removeClass(player2.mark + "BG");
+            $(".blank").removeClass(player1.mark + "BG");
+          }
+
+        } else if ((gameBoard.turnsLeft + gameBoard.gameCounter) % 2 === 0 && !player2.isHuman) {
+          gameBoard.countTurns(gameBoard.isBlank(coordinates[0], coordinates[1]));
+          gameBoard.makeMark(coordinates[0], coordinates[1], player1);
+          gameBoard.changeHightlight(player1);
+          player1.setCell(coordinates[0], coordinates[1]);
+          player2.popCell(coordinates[0], coordinates[1]);
+          if (player1.checkForWinner()) {
+            player1.playerWin(gameBoard);
+            $(".blank").removeClass(player2.mark + "BG");
+            $(".blank").removeClass(player1.mark + "BG");
+          } else {
+            player2.computerTurn(gameBoard, player1);
           }
         }
 
@@ -234,7 +301,7 @@ $(function() {
 
   //Reset UI and back-end objects for new game
   $("#resetButton").click(function(){
-    resetObjects(gameBoard, player1, player2);
     resetUI();
+    resetObjects(gameBoard, player1, player2);
   })
 })

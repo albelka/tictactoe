@@ -5,6 +5,16 @@
   /*background-color: rgba(0, 0, 0, 0.0); hidden until we fix background strikethrough lines*/
 }
 
+.xBG:hover {
+  background-image: url(../img/x.png);
+  background-size: contain;
+}
+
+.oBG:hover {
+  background-image: url(../img/o.png);
+  background-size: contain;
+}
+
 .playerCounter {
   text-align: center;
   font-family: monospace;
@@ -19,6 +29,7 @@
   /*background-image: url("../img/horizontal.png");*/
   display: none;
   background-size: 100% 100%;
+  background-color: lightgray;
 }
 
 #resetButton {
@@ -31,10 +42,15 @@
 
 .opponentSelectButton {
   background-color: lightgray;
+  text-align: center;
+  padding: 10px 0px 15px 0px;
+  margin: 20px;
+  border-radius: 5px;
 }
 
 .opponentSelectButton:hover {
   cursor: pointer;
+  background-color: gray;
 }
 
 img {
