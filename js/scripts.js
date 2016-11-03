@@ -117,7 +117,7 @@ function resetUI() {
 
 function generateUIBoard() {
   for (row = 0; row < 3; row++) {
-    $(".gridContainer").append('<div class="row" id="'+ row + '"></div>');
+    $(".gridContainer").append('<div class="row" id="'+ row+ '"></div>');
   }
   $(".gridContainer .row").each(function(row) {
     for (column = 0; column < 3; column++) {
